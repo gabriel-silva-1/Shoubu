@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Torneio</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 1rem;
+      background: #f0f4f9;
+      max-width: 400px;
+      margin: auto;
+    }
+
+    h1, h2 {
+      margin: 1rem 0 0.5rem;
+    }
+
+    .card {
+      border: 2px solid black;
+      border-radius: 12px;
+      padding: 1rem;
+      background: white;
+      margin-bottom: 1rem;
+    }
+
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+    }
+
+    .image-column {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-right: 1rem;
+    }
+
+    .image-circle {
+        width: 80px;
+        height: 80px;
+        border: 1px solid black;
+        border-radius: 50%;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 0.3rem;
+    }
+
+    .image-circle img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .nome-torneio {
+      font-size: 0.9rem;
+    }
+
+    .text-block {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      justify-content: center;
+      align-items: flex-end;
+      flex: 1;
+    }
+
+    .text-block p {
+      margin: 0.2rem 0;
+      display: flex;
+      flex-direction: column;
+     
+    }
+
+    .list-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 2px solid black;
+      border-radius: 20px;
+      padding: 0.5rem 1rem;
+      margin-bottom: 0.5rem;
+      background: white;
+    }
+
+    .list-left {
+      display: flex;
+      align-items: center;
+    }
+
+    .circle {
+      width: 30px;
+      height: 30px;
+      border: 2px solid black;
+      border-radius: 50%;
+      margin-right: 0.5rem;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .circle-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Torneio Atual</h1>
+  <div class="card">
+    <div class="card-top">
+      <div class="image-column">
+        <div class="image-circle">
+            <img src="https://img.icons8.com/?size=100&id=60012&format=png&color=000000" alt="Image description">
+        </div>
+        <span class="nome-torneio">Espia+</span>
+      </div>
+      <div class="text-block">
+        <p>FIFA</p>
+        <p>32 jogadores</p>
+        <p>2/5 Rodadas</p>
+      </div>
+    </div>
+  </div>
+
+  <h2>Torneio Anteriores</h2>
+  <div class="list-item">
+    <div class="list-left">
+      <div class="circle">
+        <img class="circle-img" src="https://img.icons8.com/?size=100&id=60012&format=png&color=000000" alt="Image description">
+      </div>
+      <span>Gincana</span>
+    </div>
+    <span>></span>
+  </div>
+
+  <div class="list-item">
+    <div class="list-left">
+      <div class="circle">
+         <img class="circle-img" src="https://img.icons8.com/?size=100&id=60012&format=png&color=000000" alt="Image description">
+      </div>
+      <span>Hackathon</span>
+    </div>
+    <span>></span>
+  </div>
+
+</body>
+</html>

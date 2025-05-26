@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html>
+    <head>
+        <title>Shoubu</title>
+    </head>
+    <body>
+      <div class="city">
+        <div class="city-header">
+             <div class="header-main">
+                <p>Torneio atual<p>
+                <div class="center-img">
+                    <img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" alt="Logo do GitHub" width="50" height="50">
+                </div>
+            </div>
+        <div class="town">
+            <p>FIFA</p>
+            <p>32</p>
+            <p>2/5 Rodadas</p>
+        </div>
+    </div>
+</div>
+    </body>
+</html>
+
+<style>
+.city-header {
+    display: flex;
+    align-items: left;
+    background-color: #4CAF50;
+    color: white;
+
+}
+
+.center-img {
+    margin-top: 1px;
+}
+.town {
+    text-align: right;
+    align-self: flex-end;
+    
+}
+.city {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  background-color: tomato;
+  color: white;
+  padding: 0px;
+  border: 2px solid red;
+  border-radius: 1px;
+}
+/* Responsive styles for mobile */
+/* Responsive styles for mobile */
+@media (max-width: 500px) {
+  .city-header {
+    align-items: stretch;
+  }
+  .header-main {
+    align-self: left;
+    text-align: left;
+    width: 100%;
+    font-size: 2.0em;  
+  }
+  .header-main h2 {
+    font-size: 1.6em;      /* Much more readable on mobile */
+    text-align: left;
+    width: 100%;
+  }
+  .center-img img {
+    width: 20vw;
+    height: auto;
+  }
+  .town {
+    align-self: right;
+    text-align: right;
+    width: 100%;
+    font-size: 1.4em;        /* Normal readable size */
+  }
+  .city {
+    max-width: 100vw;
+  }
+}
+</style>
