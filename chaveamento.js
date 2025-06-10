@@ -105,7 +105,7 @@ function editPlayer(id) {
 }
 
 // Bracket size options: 2, 4, 8, 16, 32
-generatePlayerBracket(16);
+generatePlayerBracket(8);
 
 const matchControl = document.getElementById('match-control');
 let currentMatch = null;
@@ -113,26 +113,47 @@ let currentMatchIndex = 0;
 let matches = [];
 let playedMatches = [];
 
-function extractInitialMatches() {
-  const textElements = Array.from(svg.querySelectorAll("text"))
-    .filter(t => t.id.startsWith("r0p")); // only round 0
-
+function extractMatchesFromCurrentRound() {
   matches = [];
-  for (let i = 0; i < textElements.length; i += 2) {
-    const player1 = textElements[i].textContent;
-    const player2 = textElements[i + 1]?.textContent || "TBD";
-    matches.push({
-      player1,
-      player2,
-      id1: `r0p${i}`,
-      id2: `r0p${i + 1}`
-    });
+  currentMatchRound = -1;
+
+  // Find the round with unfinished matches
+  for (let r = 0; ; r++) {
+    const texts = Array.from(svg.querySelectorAll("text"))
+      .filter(t => t.id.startsWith(`r${r}p`));
+
+    if (texts.length === 0) break; // no more rounds
+
+    const nextRoundTexts = Array.from(svg.querySelectorAll("text"))
+      .filter(t => t.id.startsWith(`r${r + 1}p`));
+
+    // Only process this round if not all next-round entries are filled
+    const nextRoundFilled = nextRoundTexts.every(t => t.textContent && t.textContent !== '');
+    if (!nextRoundFilled) {
+      currentMatchRound = r;
+      for (let i = 0; i < texts.length; i += 2) {
+        const player1 = texts[i].textContent || "TBD";
+        const player2 = texts[i + 1]?.textContent || "TBD";
+        matches.push({
+          player1,
+          player2,
+          id1: texts[i].id.replace("-text", ""),
+          id2: texts[i + 1]?.id.replace("-text", "")
+        });
+      }
+      break;
+    }
   }
 }
 
 function setMatchSelectorState() {
-  extractInitialMatches();
+  extractMatchesFromCurrentRound();
   matchControl.innerHTML = '';
+
+  if (matches.length === 0) {
+    matchControl.textContent = "🏆 Tournament complete!";
+    return;
+  }
 
   const label = document.createElement('label');
   label.textContent = "Select Match:";
@@ -140,7 +161,7 @@ function setMatchSelectorState() {
   select.id = "match-select";
 
   matches.forEach((match, idx) => {
-    if (!playedMatches.includes(idx)) {
+    if (!playedMatches.includes(`${currentMatchRound}-${idx}`)) {
       const option = document.createElement('option');
       option.value = idx;
       option.textContent = `${match.player1} vs ${match.player2}`;
@@ -160,7 +181,7 @@ function setMatchSelectorState() {
     matchControl.appendChild(select);
     matchControl.appendChild(button);
   } else {
-    matchControl.textContent = "All matches have been played.";
+    matchControl.textContent = "All matches in this round have been played.";
   }
 }
 
@@ -209,7 +230,7 @@ function handleWinner(winner) {
     nextTextElem.textContent = winner;
   }
 
-  playedMatches.push(currentMatchIndex);
+  playedMatches.push(`${currentMatchRound}-${currentMatchIndex}`);
   setMatchSelectorState();
 }
 
