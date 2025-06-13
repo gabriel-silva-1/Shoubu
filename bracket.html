@@ -38,13 +38,66 @@
 </head>
 <body>
 
-<h1>Bracket</h1>
+<h1 id="tournament-title">Bracket</h1>
+<div id="rounds-counter" style="text-align:center; font-size:1.1rem; margin-bottom:1rem; color:#444;"></div>
+<div id="match-timer" style="text-align:center; font-size:1.2rem; margin-bottom:1rem; color:#222;">00:00</div>
 <div class="bracket-container">
   <svg id="bracket" width="2000" height="1000"></svg>
 </div>
 <div id="match-control" style="position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid #ccc; padding: 1rem; display: flex; flex-direction: column; align-items: center; gap: 1rem; z-index: 10;">
   <!-- Dynamic content goes here -->
 </div>
+<script>
+  const playerNames = JSON.parse(localStorage.getItem('playerNames') || '[]');
+  const bracketSize = parseInt(localStorage.getItem('bracketSize') || '8', 10);
+
+  let timerInterval = null;
+  let timerSeconds = 0;
+
+  function updateTimerDisplay() {
+    const min = String(Math.floor(timerSeconds / 60)).padStart(2, '0');
+    const sec = String(timerSeconds % 60).padStart(2, '0');
+    document.getElementById('match-timer').textContent = `${min}:${sec}`;
+  }
+
+  function startMatchTimer() {
+    if (timerInterval) clearInterval(timerInterval);
+    timerSeconds = 0;
+    updateTimerDisplay();
+    timerInterval = setInterval(() => {
+      timerSeconds++;
+      updateTimerDisplay();
+    }, 1000);
+  }
+
+  function stopMatchTimer() {
+    if (timerInterval) clearInterval(timerInterval);
+    timerInterval = null;
+    timerSeconds = 0;
+    updateTimerDisplay();
+  }
+  window.startMatchTimer = startMatchTimer;
+  window.stopMatchTimer = stopMatchTimer;
+
+  window.addEventListener('DOMContentLoaded', () => {
+    if (typeof window.initBracket === 'function') {
+      window.initBracket(playerNames, bracketSize);
+    } else {
+      window.initBracketPending = { playerNames, bracketSize };
+   }
+
+   const totalRounds = Math.log2(bracketSize);
+   updateRoundsCounter(totalRounds, totalRounds);
+   updateTimerDisplay();
+  });
+
+  const tournamentName = localStorage.getItem('tournamentName') || 'Bracket';
+  document.getElementById('tournament-title').textContent = tournamentName;
+
+  function updateRoundsCounter(current, total) {
+    document.getElementById('rounds-counter').textContent = `${current}/${total} rodadas`;
+  }
+</script>
 <script src="chaveamento.js"></script>
 </body>
 </html>

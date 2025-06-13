@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Nome do Torneio</title>
+  <style>
+    body { font-family: sans-serif; background: #f8f9fa; margin: 0; padding: 0; }
+    .container { max-width: 400px; margin: 2rem auto; background: #fff; border-radius: 8px; box-shadow: 0 2px 8px #0001; padding: 2rem; }
+    h2 { text-align: center; }
+    input[type="text"], select { width: 100%; padding: 0.5rem; margin-bottom: 1rem; }
+    button { padding: 0.7rem 1.5rem; font-size: 1rem; cursor: pointer; width: 100%; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Nome do Torneio</h2>
+    <form id="tourney-form">
+      <input type="text" id="tournament-name" placeholder="Digite o nome do torneio" required>
+      <select id="modality" required>
+        <option value="" disabled selected>Selecione a modalidade</option>
+        <option value="FIFA">FIFA</option>
+        <option value="Ping Pong">Ping Pong</option>
+        <option value="Cubo Mágico">Cubo Mágico</option>
+        <option value="Xadrez">Xadrez</option>
+      </select>
+      <button type="submit">Próximo</button>
+    </form>
+  </div>
+  <script>
+    document.getElementById('tourney-form').onsubmit = function(e) {
+      e.preventDefault();
+      const name = document.getElementById('tournament-name').value.trim();
+      const modality = document.getElementById('modality').value;
+      if (name.length === 0 || !modality) return;
+      localStorage.setItem('tournamentName', name);
+      localStorage.setItem('tournamentModality', modality);
+      window.location.href = "create.html";
+    };
+  </script>
+</body>
+</html>

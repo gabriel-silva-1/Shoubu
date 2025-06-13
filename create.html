@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Criar Torneio</title>
+  <style>
+    body { font-family: sans-serif; background: #f8f9fa; margin: 0; padding: 0; }
+    .container { max-width: 400px; margin: 2rem auto; background: #fff; border-radius: 8px; box-shadow: 0 2px 8px #0001; padding: 2rem; }
+    h2 { text-align: center; }
+    label, select, input { display: block; width: 100%; margin-bottom: 1rem; }
+    input[type="text"] { padding: 0.5rem; }
+    button { padding: 0.7rem 1.5rem; font-size: 1rem; cursor: pointer; width: 100%; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Criar Torneio</h2>
+    <form id="player-form">
+      <label for="bracket-size">Tamanho da Chave:</label>
+      <select id="bracket-size" name="bracket-size">
+        <option value="2">2 jogadores</option>
+        <option value="4">4 jogadores</option>
+        <option value="8" selected>8 jogadores</option>
+        <option value="16">16 jogadores</option>
+        <option value="32">32 jogadores</option>
+      </select>
+      <div id="player-inputs"></div>
+      <button type="submit">Iniciar Torneio</button>
+    </form>
+  </div>
+  <script>
+    const playerForm = document.getElementById('player-form');
+    const playerInputsDiv = document.getElementById('player-inputs');
+    const bracketSizeSelect = document.getElementById('bracket-size');
+
+    function updatePlayerInputs(size) {
+      playerInputsDiv.innerHTML = '';
+      for (let i = 1; i <= size; i++) {
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.name = 'player';
+        input.placeholder = `Jogador ${i}`;
+        input.required = i <= 2;
+        playerInputsDiv.appendChild(input);
+      }
+    }
+
+    bracketSizeSelect.onchange = function() {
+      updatePlayerInputs(parseInt(this.value, 10));
+    };
+
+    // Initialize with default bracket size
+    updatePlayerInputs(parseInt(bracketSizeSelect.value, 10));
+
+    playerForm.onsubmit = function(e) {
+      e.preventDefault();
+      const size = parseInt(bracketSizeSelect.value, 10);
+      const names = Array.from(playerInputsDiv.querySelectorAll('input'))
+        .map(input => input.value.trim())
+        .filter(name => name.length > 0);
+      if (names.length < 2) {
+        alert('Insira pelo menos dois jogadores.');
+        return;
+      }
+      while (names.length < size) names.push("TBD");
+      // Save to localStorage for bracket.html to use
+      localStorage.setItem('playerNames', JSON.stringify(names));
+      localStorage.setItem('bracketSize', size);
+      window.location.href = "bracket.html";
+    };
+  </script>
+</body>
+</html>

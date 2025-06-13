@@ -44,8 +44,9 @@ function generatePlayerBracket(players) {
       text.setAttribute("x", x + 10);
       text.setAttribute("y", y + 20);
       text.setAttribute("id", `${id}-text`);
-      text.textContent = r === 0 ? `Player ${i + 1}` : '';
-
+      text.textContent = r === 0
+        ? (playerNames && playerNames[i] ? playerNames[i] : `Player ${i + 1}`)
+        : '';
       group.appendChild(rect);
       group.appendChild(text);
       svg.appendChild(group);
@@ -105,7 +106,12 @@ function editPlayer(id) {
 }
 
 // Bracket size options: 2, 4, 8, 16, 32
-generatePlayerBracket(8);
+//generatePlayerBracket(8);
+
+window.initBracket = function(playerNames, size) {
+  generatePlayerBracket(size, playerNames);
+  setMatchSelectorState();
+}
 
 const matchControl = document.getElementById('match-control');
 let currentMatch = null;
@@ -176,6 +182,7 @@ function setMatchSelectorState() {
       currentMatchIndex = parseInt(select.value, 10);
       currentMatch = matches[currentMatchIndex];
       setCurrentMatchState();
+      if (window.startMatchTimer) window.startMatchTimer();
     };
     matchControl.appendChild(label);
     matchControl.appendChild(select);
@@ -194,6 +201,7 @@ function setCurrentMatchState() {
   const button = document.createElement('button');
   button.textContent = "End Match";
   button.onclick = () => {
+    if(window.stopMatchTimer) window.stopMatchTimer();
     setWinnerSelectState();
   };
 
@@ -233,6 +241,9 @@ function handleWinner(winner) {
   playedMatches.push(`${currentMatchRound}-${currentMatchIndex}`);
   setMatchSelectorState();
 }
+
+// Example: when starting a new round
+updateRoundsCounter(currentRound, totalRounds);
 
 // Start UI
 setMatchSelectorState();
