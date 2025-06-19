@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resultados</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background: linear-gradient(135deg, #14733c, #115f0d);
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      background: #ffffff;
+      border-radius: 4px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+      padding: 2rem;
+      width: 90%;
+      max-width: 420px;
+      border: 2px solid #115f0d;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      margin-bottom: 1.5rem;
+      color: #000000;
+      letter-spacing: 1px;
+      font-size: 1.8rem;
+    }
+
+    .podium {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 15px;
+      margin-bottom: 2rem;
+      width: 100%;
+    }
+
+    .place {
+      flex: 1;
+      text-align: center;
+      background-color: #fff;
+      border-radius: 10px 10px 0 0;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 10px;
+      font-weight: bold;
+    }
+
+    .first {
+      height: 150px;
+      background-color: gold;
+    }
+
+    .second {
+      height: 120px;
+      background-color: silver;
+    }
+
+    .third {
+      height: 100px;
+      background-color: #cd7f32;
+    }
+
+    .winner-name {
+      margin-top: 10px;
+    }
+
+    .new-tourney-button {
+      width: 100%;
+      padding: 0.9rem;
+      font-size: 1rem;
+      background: #14733c;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: bold;
+    }
+
+    .new-tourney-button:hover {
+      background: #018a38;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>🏆 Top 3</h1>
+
+    <div class="podium">
+      <div class="place second">
+        <div class="winner-name" id="second">Jogador 2</div>
+      </div>
+      <div class="place first">
+        <div class="winner-name" id="first">Jogador 1</div>
+      </div>
+      <div class="place third">
+        <div class="winner-name" id="third">Jogador 3</div>
+      </div>
+    </div>
+
+    <button class="new-tourney-button" onclick="window.location.href='index.html'">
+      Criar novo torneio
+    </button>
+  </div>
+
+  <script>
+    const podium = JSON.parse(localStorage.getItem('podium'));
+    if (podium) {
+      document.getElementById('first').textContent = `🥇 1º: ${podium.first}`;
+      document.getElementById('second').textContent = `🥈 2º: ${podium.second}`;
+      document.getElementById('third').textContent = `🥉 3º: ${podium.third}`;
+    }
+  </script>
+</body>
+
+</html>

@@ -157,12 +157,49 @@ function setMatchSelectorState() {
   matchControl.innerHTML = '';
 
   if (matches.length === 0) {
-    matchControl.textContent = "🏆 Tournament complete!";
+    matchControl.innerHTML = ""; // Clear previous content
+
+    const msg = document.createElement('div');
+    msg.textContent = "🏆 Fim de Jogo!";
+    matchControl.appendChild(msg);
+
+    const resultsBtn = document.createElement('button');
+    resultsBtn.textContent = "Ver resultados";
+    resultsBtn.onclick = () => {
+      const bracketSize = parseInt(localStorage.getItem('bracketSize') || '8', 10);
+      const totalRounds = Math.log2(bracketSize);
+
+      const finalWinner = document.getElementById(`r${totalRounds}p0-text`)?.textContent || 'TBD';
+      const finalist1 = document.getElementById(`r${totalRounds - 1}p0-text`)?.textContent || '';
+      const finalist2 = document.getElementById(`r${totalRounds - 1}p1-text`)?.textContent || '';
+      const finalLoser = [finalist1, finalist2].find(p => p && p !== finalWinner) || 'TBD';
+
+      const semiRound = totalRounds - 2;
+      const semiNames = [
+        document.getElementById(`r${semiRound}p0-text`)?.textContent,
+        document.getElementById(`r${semiRound}p1-text`)?.textContent,
+        document.getElementById(`r${semiRound}p2-text`)?.textContent,
+        document.getElementById(`r${semiRound}p3-text`)?.textContent
+      ].filter(Boolean);
+
+      const thirdPlace = semiNames.find(p => p !== finalist1 && p !== finalist2) || 'TBD';
+
+      localStorage.setItem('podium', JSON.stringify({
+        first: finalWinner,
+        second: finalLoser,
+        third: thirdPlace
+      }));
+
+      window.location.href = 'winner.html';
+    };
+
+    matchControl.appendChild(document.createElement('br'));
+    matchControl.appendChild(resultsBtn);
     return;
   }
 
   const label = document.createElement('label');
-  label.textContent = "Select Match:";
+  label.textContent = "Selecionar partida:";
   const select = document.createElement('select');
   select.id = "match-select";
 
@@ -177,7 +214,7 @@ function setMatchSelectorState() {
 
   if (select.options.length > 0) {
     const button = document.createElement('button');
-    button.textContent = "Start Match";
+    button.textContent = "Começar partida";
     button.onclick = () => {
       currentMatchIndex = parseInt(select.value, 10);
       currentMatch = matches[currentMatchIndex];
@@ -188,7 +225,7 @@ function setMatchSelectorState() {
     matchControl.appendChild(select);
     matchControl.appendChild(button);
   } else {
-    matchControl.textContent = "All matches in this round have been played.";
+    matchControl.textContent = "Todas as partidas desta rodada já foram jogadas.";
   }
 }
 
@@ -196,12 +233,12 @@ function setCurrentMatchState() {
   matchControl.innerHTML = '';
 
   const title = document.createElement('div');
-  title.textContent = `Current Match: ${currentMatch.player1} vs ${currentMatch.player2}`;
+  title.textContent = `Partida atual: ${currentMatch.player1} vs ${currentMatch.player2}`;
 
   const button = document.createElement('button');
-  button.textContent = "End Match";
+  button.textContent = "Terminar partida";
   button.onclick = () => {
-    if(window.stopMatchTimer) window.stopMatchTimer();
+    if (window.stopMatchTimer) window.stopMatchTimer();
     setWinnerSelectState();
   };
 
@@ -213,7 +250,7 @@ function setWinnerSelectState() {
   matchControl.innerHTML = '';
 
   const title = document.createElement('div');
-  title.textContent = "Select Winner:";
+  title.textContent = "Selecionar ganhador:";
 
   const btn1 = document.createElement('button');
   btn1.textContent = currentMatch.player1;
@@ -242,8 +279,3 @@ function handleWinner(winner) {
   setMatchSelectorState();
 }
 
-// Example: when starting a new round
-updateRoundsCounter(currentRound, totalRounds);
-
-// Start UI
-setMatchSelectorState();

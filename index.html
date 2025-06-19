@@ -1,15 +1,108 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 
 <head>
-    <title>Shoubu</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crie seu Torneio</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background: linear-gradient(135deg, #14733c, #115f0d);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: #ffffff;
+            border-radius: 4px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            padding: 2rem;
+            width: 90%;
+            max-width: 420px;
+            border: 2px solid #115f0d;
+        }
+
+        h2 {
+            text-align: left;
+            margin-bottom: 1.5rem;
+            color: #000000;
+            letter-spacing: 1px;
+        }
+
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        select:focus {
+            border-color: #115f0d;
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 0.9rem;
+            font-size: 1rem;
+            background: #14733c;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #018a38;
+        }
+    </style>
 </head>
 
 <body>
-    <h1>Aplicação Web/Mobile para organização de torneios</h1>
-    <h2>Integrantes</h2>
-    <p>Gabriel Silva</p>
-    <p>claudio santana</p>
+    <div class="container">
+        <h2>Crie seu Torneio</h2>
+        <form id="tourney-form">
+            <input type="text" id="tournament-name" placeholder="Digite o nome do torneio" required>
+            <select id="modality" required>
+                <option value="" disabled selected>🎯 Selecione a modalidade</option>
+                <option value="FIFA">🎮 FIFA</option>
+                <option value="Ping Pong">🏓 Ping Pong</option>
+                <option value="Cubo Mágico">🔲 Cubo Mágico</option>
+                <option value="Xadrez">♟️ Xadrez</option>
+            </select>
+            <button type="submit">Próximo</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('tourney-form').onsubmit = function (e) {
+            e.preventDefault();
+            const name = document.getElementById('tournament-name').value.trim();
+            const modality = document.getElementById('modality').value;
+            if (name.length === 0 || !modality) return;
+            localStorage.setItem('tournamentName', name);
+            localStorage.setItem('tournamentModality', modality);
+            window.location.href = "create.html";
+        };
+    </script>
 </body>
 
 </html>

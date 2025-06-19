@@ -5,35 +5,109 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tela do Torneio</title>
   <style>
-    body {
-      font-family: sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f8f9fa;
-    }
-    h1 {
-      text-align: center;
-      padding: 1rem;
-    }
-    .bracket-container {
-      overflow-x: auto;
-      padding: 1rem;
-      white-space: nowrap;
-    }
-    svg {
-      min-width: 1000px;
-      height: 1000px;
-    }
-    text {
-      font-size: 12px;
-      pointer-events: none;
-    }
-    .player-box {
-      cursor: pointer;
-    }
-    .player-box:hover rect {
-      fill: #e0eaff;
-    }
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Open Sans', sans-serif;
+    background-color: #f4f5f7;
+    color: #222;
+    min-height: 100vh;
+    padding-bottom: 160px; /* space for fixed controller */
+  }
+
+  h1 {
+    text-align: left;
+    font-size: 1.5rem;
+    margin: 1rem 1rem;
+    color: #333;
+  }
+
+  #rounds-counter,
+  #match-timer {
+    text-align: center;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    color: #555;
+  }
+
+  .bracket-container {
+    padding: 1rem;
+    overflow-x: auto;
+    white-space: nowrap;
+    background: #ffffff;
+    margin: 0 auto 1rem;
+    border-radius: 4px;
+    max-width: 96%;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  }
+
+  svg {
+    min-width: 1000px;
+    height: auto;
+  }
+
+  text {
+    font-size: 13px;
+    pointer-events: none;
+    fill: #333;
+  }
+
+  .player-box {
+    cursor: pointer;
+  }
+
+  .player-box:hover rect {
+    fill: #e6f0ff;
+  }
+
+  #match-control {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #ffffff;
+    border-top: 1px solid #ccc;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+    z-index: 100;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+  }
+
+  #match-control select,
+  #match-control button {
+    font-size: 1rem;
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+  }
+
+  #match-control button {
+    background-color: #115f0d;
+    color: white;
+    border: none;
+    font-weight: bold;
+    transition: background-color 0.2s;
+    cursor: pointer;
+  }
+
+  #match-control button:hover {
+    background-color: #3c9741;
+  }
+
+  label {
+    font-weight: bold;
+    color: #444;
+  }
+</style>
+</style>
+
   </style>
 </head>
 <body>
@@ -97,6 +171,51 @@
   function updateRoundsCounter(current, total) {
     document.getElementById('rounds-counter').textContent = `${current}/${total} rodadas`;
   }
+
+  // Replace these with your actual winner variables
+  const firstPlace = actualWinnerName;      // Winner of the final
+  const secondPlace = actualFinalLoser;     // Loser of the final
+  const thirdPlace = actualThirdPlaceName;  // Winner of 3rd place match or correct logic
+
+  localStorage.setItem('podium', JSON.stringify({
+    first: firstPlace,
+    second: secondPlace,
+    third: thirdPlace
+  }));
+
+  window.location.href = 'winner.html';
+
+  window.addEventListener('DOMContentLoaded', () => {
+  if (typeof window.initBracket === 'function') {
+    window.initBracket(playerNames, bracketSize);
+  } else {
+    window.initBracketPending = { playerNames, bracketSize };
+  }
+
+  const totalRounds = Math.log2(bracketSize);
+  updateRoundsCounter(totalRounds, totalRounds);
+  updateTimerDisplay();
+
+  // Check if tournament is finished
+  const finalText = document.getElementById(`r${totalRounds}p0-text`);
+  const semifinal1Loser = document.getElementById(`r${totalRounds - 1}p0-text`)?.textContent;
+  const semifinal2Loser = document.getElementById(`r${totalRounds - 1}p1-text`)?.textContent;
+  const finalLoser = document.getElementById(`r${totalRounds - 1}p0-text`)?.textContent === finalText?.textContent
+    ? document.getElementById(`r${totalRounds - 1}p1-text`)?.textContent
+    : document.getElementById(`r${totalRounds - 1}p0-text`)?.textContent;
+
+  const possibleThirds = [semifinal1Loser, semifinal2Loser].filter(p => p && p !== finalLoser);
+  const thirdPlace = possibleThirds[0] || "TBD";
+
+  if (finalText && finalText.textContent) {
+    localStorage.setItem('podium', JSON.stringify({
+      first: finalText.textContent,
+      second: finalLoser || "TBD",
+      third: thirdPlace
+    }));
+    window.location.href = 'winner.html';
+  }
+});
 </script>
 <script src="chaveamento.js"></script>
 </body>

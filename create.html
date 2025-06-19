@@ -1,15 +1,108 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Criar Torneio</title>
   <style>
-    body { font-family: sans-serif; background: #f8f9fa; margin: 0; padding: 0; }
-    .container { max-width: 400px; margin: 2rem auto; background: #fff; border-radius: 8px; box-shadow: 0 2px 8px #0001; padding: 2rem; }
-    h2 { text-align: center; }
-    label, select, input { display: block; width: 100%; margin-bottom: 1rem; }
-    input[type="text"] { padding: 0.5rem; }
-    button { padding: 0.7rem 1.5rem; font-size: 1rem; cursor: pointer; width: 100%; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background: linear-gradient(135deg, #14733c, #115f0d);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .container {
+      background: #ffffff;
+      border-radius: 4px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      padding: 2rem 1.5rem;
+      width: 100%;
+      max-width: 420px;
+      border: 2px solid #115f0d;
+    }
+
+    h2 {
+      text-align: left;
+      margin-bottom: 1.5rem;
+      color: #000000;
+      letter-spacing: 0.8px;
+      font-size: 1.8rem;
+    }
+
+    label {
+      font-weight: 500;
+      color: #444;
+      margin-bottom: 0.4rem;
+      display: block;
+    }
+
+    select,
+    input[type="text"] {
+      width: 100%;
+      padding: 1rem;
+      margin-bottom: 1.2rem;
+      border: 1.8px solid #ccc;
+      border-radius: 10px;
+      font-size: 1rem;
+      transition: border-color 0.3s;
+    }
+
+    select:focus,
+    input[type="text"]:focus {
+      border-color: #00b74a;
+      outline: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 1.1rem;
+      font-size: 1.05rem;
+      background: #14733c;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.3s;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background: #01974d;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 1.5rem 1rem;
+        border-width: 2px;
+      }
+
+      input[type="text"],
+      select {
+        font-size: 0.95rem;
+        padding: 0.9rem;
+      }
+
+      button {
+        font-size: 1rem;
+        padding: 1rem;
+      }
+
+      h2 {
+        font-size: 1.2rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -24,10 +117,13 @@
         <option value="16">16 jogadores</option>
         <option value="32">32 jogadores</option>
       </select>
+
       <div id="player-inputs"></div>
+
       <button type="submit">Iniciar Torneio</button>
     </form>
   </div>
+
   <script>
     const playerForm = document.getElementById('player-form');
     const playerInputsDiv = document.getElementById('player-inputs');
@@ -36,34 +132,37 @@
     function updatePlayerInputs(size) {
       playerInputsDiv.innerHTML = '';
       for (let i = 1; i <= size; i++) {
+        const wrapper = document.createElement('div');
         const input = document.createElement('input');
         input.type = 'text';
         input.name = 'player';
         input.placeholder = `Jogador ${i}`;
         input.required = i <= 2;
-        playerInputsDiv.appendChild(input);
+        wrapper.appendChild(input);
+        playerInputsDiv.appendChild(wrapper);
       }
     }
 
-    bracketSizeSelect.onchange = function() {
+    bracketSizeSelect.onchange = function () {
       updatePlayerInputs(parseInt(this.value, 10));
     };
 
-    // Initialize with default bracket size
     updatePlayerInputs(parseInt(bracketSizeSelect.value, 10));
 
-    playerForm.onsubmit = function(e) {
+    playerForm.onsubmit = function (e) {
       e.preventDefault();
       const size = parseInt(bracketSizeSelect.value, 10);
       const names = Array.from(playerInputsDiv.querySelectorAll('input'))
         .map(input => input.value.trim())
         .filter(name => name.length > 0);
+
       if (names.length < 2) {
         alert('Insira pelo menos dois jogadores.');
         return;
       }
+
       while (names.length < size) names.push("TBD");
-      // Save to localStorage for bracket.html to use
+
       localStorage.setItem('playerNames', JSON.stringify(names));
       localStorage.setItem('bracketSize', size);
       window.location.href = "bracket.html";
